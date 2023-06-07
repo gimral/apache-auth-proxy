@@ -24,7 +24,7 @@ services:
       - 8094:8080
 
   reverse-proxy:
-    image: gimral/apache-reverse-proxy:1.0
+    image: gimral/apache-auth-proxy:1.0
     build:
       context: .
       dockerfile: Dockerfile
