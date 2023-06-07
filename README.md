@@ -1,1 +1,1 @@
-# apache-auth-proxy
+docker build -t apache-reverse-proxy .
