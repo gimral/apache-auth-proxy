@@ -16,6 +16,17 @@ services:
       - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@127.0.0.1:9093
       - ALLOW_PLAINTEXT_LISTENER=yes
 
+  openldap:
+    image: bitnami/openldap:2
+    ports:
+      - '1389:1389'
+      - '1636:1636'
+    environment:
+      - LDAP_ADMIN_USERNAME=admin
+      - LDAP_ADMIN_PASSWORD=admin
+      - LDAP_USERS=dev
+      - LDAP_PASSWORDS=dev
+
   kowl:
     image: docker.redpanda.com/redpandadata/console
     environment:
@@ -23,15 +34,18 @@ services:
     ports:
       - 8094:8080
 
-  reverse-proxy:
+  auth-proxy:
     image: gimral/apache-auth-proxy:1.0
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        - AUTH_TYPE=ldap
     environment:
       - BACKEND_URL=http://kowl:8080
       - SESSION_SECRET=our_secret
-      - USER_NAME=admin
-      - PASSWORD=admin
+      - LDAP_URL=ldap://openldap:1389/dc=example,dc=org?uid?sub?(objectClass=*)
+      - LDAP_BIND_DN=cn=admin,dc=example,dc=org
+      - LDAP_BIND_PASSWORD=admin
     ports:
       - 8095:80
