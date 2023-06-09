@@ -51,7 +51,7 @@ services:
       - 8095:80
 
   auth-proxy-basic:
-    image: gimral/apache-auth-proxy:1.1
+    image: gimral/apache-auth-proxy:1.2
     build:
       context: .
       dockerfile: Dockerfile
