@@ -34,7 +34,7 @@ services:
     ports:
       - 8094:8080
 
-  auth-proxy:
+  auth-proxy-ldap:
     image: gimral/apache-auth-proxy:1.0
     build:
       context: .
@@ -49,3 +49,18 @@ services:
       - LDAP_BIND_PASSWORD=admin
     ports:
       - 8095:80
+
+  auth-proxy-basic:
+    image: gimral/apache-auth-proxy:1.1
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - AUTH_TYPE=file
+    environment:
+      - BACKEND_URL=http://kowl:8080
+      - SESSION_SECRET=our_secret
+      - USER_NAME=admin
+      - PASSWORD=admin
+    ports:
+      - 8096:80
